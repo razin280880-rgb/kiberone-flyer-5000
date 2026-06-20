@@ -1,5 +1,5 @@
 name = "kiberone-flyer-5000-api"
-main = "api/worker.js"
+main = "worker.js"
 compatibility_date = "2026-06-01"
 
 # KV-биндинг для счётчиков визитов/заявок и резервного журнала лидов.
