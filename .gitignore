@@ -1,0 +1,15 @@
+# Local dev
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,32 @@
+name = "kiberone-flyer-5000-api"
+main = "api/worker.js"
+compatibility_date = "2026-06-01"
+
+# KV-биндинг для счётчиков визитов/заявок и резервного журнала лидов.
+# ⚠️ Перед деплоем создать KV namespace:
+#   wrangler kv:namespace create STATS
+# и подставить выданные id ниже.
+[[kv_namespaces]]
+binding = "STATS"
+id = "PUT_KV_NAMESPACE_ID_HERE"
+preview_id = "PUT_KV_PREVIEW_NAMESPACE_ID_HERE"
+
+# Открытый Origin лендинга (для CORS). Меняется через `wrangler secret put ALLOWED_ORIGIN`
+# или прямо здесь в vars.
+[vars]
+ALLOWED_ORIGIN = "https://podarok.it-kiber.ru"
+
+# Все остальные значения (API-ключи, branch ID, токены) задаются как secrets:
+#   wrangler secret put ALPHACRM_API_URL
+#   wrangler secret put ALPHACRM_API_KEY
+#   wrangler secret put ALPHACRM_BRANCH_ID_CHELNY
+#   wrangler secret put ALPHACRM_BRANCH_ID_NIZHNEKAMSK
+#   wrangler secret put ALPHACRM_BRANCH_ID_KAZAN
+#   wrangler secret put ALPHACRM_BRANCH_ID_ELABUGA
+#   wrangler secret put ALPHACRM_BRANCH_ID_KRASNODAR
+#   wrangler secret put ALPHACRM_BRANCH_ID_SURGUT
+#   wrangler secret put ALPHACRM_BRANCH_ID_PERM
+#   wrangler secret put ALPHACRM_LEAD_SOURCE_ID    # ID источника «листовка» в AlphaCRM (создать вручную)
+#   wrangler secret put TG_BOT_TOKEN
+#   wrangler secret put TG_CHAT_ID                 # 400383551 — Telegram владельца
+#   wrangler secret put STATS_TOKEN                # любой случайный токен для защиты /api/stats

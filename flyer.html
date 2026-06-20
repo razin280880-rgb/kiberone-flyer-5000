@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Листовка KIBERone · 5 000 ₽ · печать A6</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0052CC;
+      --primary-dark: #003D99;
+      --accent: #FFD93D;
+      --dark: #0F1419;
+      --gray-100: #F1F3F8;
+      --gray-300: #D5D8E0;
+      --gray-700: #4A5168;
+      --gray-900: #1A1F36;
+      --white: #FFFFFF;
+    }
+
+    @page { size: A6; margin: 0; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #E0E5EE;
+      color: var(--gray-900);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Панель управления — видна только на экране */
+    .toolbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: var(--white); border-bottom: 1px solid var(--gray-300);
+      padding: 12px 20px; display: flex; gap: 12px; align-items: center;
+      flex-wrap: wrap; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .toolbar label { font-size: 13px; font-weight: 600; color: var(--gray-700); }
+    .toolbar select, .toolbar button {
+      padding: 8px 14px; border: 1.5px solid var(--gray-300);
+      border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer;
+      background: var(--white);
+    }
+    .toolbar button {
+      background: var(--accent); border-color: var(--accent);
+      font-weight: 700; color: var(--dark);
+    }
+    .toolbar .hint { font-size: 12px; color: var(--gray-700); margin-left: auto; }
+
+    /* Полотно для печати — два листа A6 */
+    .sheets {
+      padding: 80px 20px 40px;
+      display: flex; flex-direction: column; gap: 24px; align-items: center;
+    }
+
+    /* A6 = 105 × 148 мм */
+    .flyer {
+      width: 105mm; height: 148mm;
+      background: var(--white);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+      color: var(--gray-900);
+    }
+    .flyer:last-child { page-break-after: auto; }
+
+    /* ── ЛИЦЕВАЯ СТОРОНА ── */
+    .face-front {
+      background: linear-gradient(160deg, #003D99 0%, #0052CC 60%, #0066FF 100%);
+      color: var(--white);
+      padding: 8mm 8mm 6mm;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .face-front::before {
+      content: ''; position: absolute;
+      top: -30mm; right: -30mm;
+      width: 80mm; height: 80mm;
+      background: radial-gradient(circle, rgba(255, 217, 61, 0.25) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .face-front-logo {
+      display: flex; align-items: center; gap: 6mm;
+      margin-bottom: 4mm;
+      position: relative; z-index: 1;
+    }
+    .face-front-logo img { height: 8mm; width: auto; filter: brightness(0) invert(1); }
+    .face-front-logo .tag {
+      font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
+      opacity: 0.75; font-weight: 600;
+    }
+
+    .ribbon {
+      display: inline-block;
+      background: var(--accent); color: var(--dark);
+      font-size: 9px; font-weight: 800;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 999px;
+      margin-bottom: 3mm; position: relative; z-index: 1;
+    }
+
+    .gift-amount {
+      font-size: 64pt; font-weight: 900;
+      line-height: 0.95; letter-spacing: -3px;
+      margin-bottom: 1mm; position: relative; z-index: 1;
+    }
+    .gift-amount .currency {
+      font-size: 0.45em; color: var(--accent);
+      vertical-align: top; margin-left: 4px;
+    }
+
+    .gift-headline {
+      font-size: 11pt; font-weight: 800;
+      line-height: 1.2; margin-bottom: 1mm;
+      position: relative; z-index: 1;
+    }
+    .gift-sub {
+      font-size: 8pt; font-weight: 500; opacity: 0.92;
+      line-height: 1.35; margin-bottom: 5mm;
+      position: relative; z-index: 1;
+    }
+    .gift-sub strong { color: var(--accent); font-weight: 800; }
+
+    .qr-block {
+      background: var(--white); border-radius: 4mm;
+      padding: 4mm 4mm 3mm; color: var(--gray-900);
+      display: flex; gap: 4mm; align-items: center;
+      margin-top: auto;
+      position: relative; z-index: 1;
+    }
+    .qr-block img {
+      width: 26mm; height: 26mm; display: block; flex-shrink: 0;
+    }
+    .qr-text {
+      font-size: 8pt; font-weight: 700; line-height: 1.3;
+    }
+    .qr-text .big { font-size: 10pt; font-weight: 900; color: var(--primary); display: block; margin-bottom: 1mm; }
+    .qr-text .small { font-weight: 500; color: var(--gray-700); font-size: 7pt; }
+
+    /* ── ОБРАТНАЯ СТОРОНА ── */
+    .face-back {
+      background: var(--white);
+      padding: 8mm;
+      display: flex; flex-direction: column;
+    }
+    .back-logo {
+      display: flex; align-items: center; gap: 4mm;
+      padding-bottom: 4mm; border-bottom: 1.5px solid var(--gray-100);
+      margin-bottom: 4mm;
+    }
+    .back-logo img { height: 7mm; width: auto; }
+    .back-logo .city {
+      font-size: 8pt; font-weight: 700; color: var(--primary); margin-left: auto;
+    }
+
+    .back-title {
+      font-size: 13pt; font-weight: 900; color: var(--dark);
+      line-height: 1.2; margin-bottom: 3mm; letter-spacing: -0.3px;
+    }
+    .back-title .accent { color: var(--primary); }
+
+    .benefits { list-style: none; margin-bottom: 4mm; }
+    .benefits li {
+      font-size: 8pt; font-weight: 500; color: var(--gray-900);
+      padding: 1.5mm 0 1.5mm 7mm; position: relative; line-height: 1.35;
+    }
+    .benefits li::before {
+      content: '✓';
+      position: absolute; left: 0; top: 1.5mm;
+      width: 5mm; height: 5mm; border-radius: 50%;
+      background: var(--accent); color: var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8pt; font-weight: 900;
+    }
+
+    .contact-block {
+      margin-top: auto;
+      background: var(--gray-100); border-radius: 3mm;
+      padding: 4mm 4mm 3mm;
+    }
+    .contact-label {
+      font-size: 7pt; font-weight: 800; color: var(--primary);
+      letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 2mm;
+    }
+    .contact-row {
+      font-size: 8.5pt; font-weight: 700; color: var(--dark);
+      line-height: 1.3; margin-bottom: 1.5mm;
+    }
+    .contact-row.muted { font-weight: 500; color: var(--gray-700); font-size: 7.5pt; }
+
+    .referral-line {
+      margin-top: 3mm; padding-top: 3mm;
+      border-top: 1px dashed var(--gray-300);
+      font-size: 7pt; color: var(--gray-700); line-height: 1.4;
+    }
+    .referral-line strong { color: var(--dark); }
+    .ref-input {
+      display: inline-block; min-width: 40mm;
+      border-bottom: 1px solid var(--gray-700);
+      padding: 0 4px; height: 4mm; margin-left: 2mm;
+    }
+
+    /* Печать */
+    @media print {
+      body { background: white; }
+      .toolbar { display: none !important; }
+      .sheets { padding: 0; gap: 0; }
+      .flyer { box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <label for="city-select">Город:</label>
+    <select id="city-select" onchange="changeCity(this.value)">
+      <option value="chelny">Набережные Челны</option>
+      <option value="nizhnekamsk">Нижнекамск</option>
+      <option value="kazan">Казань</option>
+      <option value="elabuga">Елабуга</option>
+      <option value="krasnodar">Краснодар</option>
+      <option value="surgut">Сургут</option>
+      <option value="perm">Пермь</option>
+    </select>
+    <label for="medium-select">Канал:</label>
+    <select id="medium-select" onchange="changeMedium(this.value)">
+      <option value="mailbox">Почтовые ящики</option>
+      <option value="referral">Рекомендация (клиент → друг)</option>
+    </select>
+    <button onclick="window.print()">🖨 Печать A6 (2 страницы)</button>
+    <span class="hint">Печатать: A6, без полей, двусторонняя короткой стороной</span>
+  </div>
+
+  <div class="sheets">
+
+    <!-- ЛИЦО -->
+    <div class="flyer face-front" id="front">
+      <div class="face-front-logo">
+        <img src="logo-kiberone.png" alt="KIBERone">
+        <span class="tag">школа AI&nbsp;+ программирования</span>
+      </div>
+
+      <div class="ribbon">🎁 сертификат-подарок</div>
+
+      <div class="gift-amount">5&nbsp;000<span class="currency">₽</span></div>
+
+      <div class="gift-headline">в обучение программированию<br>и работе с искусственным интеллектом</div>
+      <div class="gift-sub">Активируется при записи на <strong>бесплатный пробный урок</strong>. Дети 6–14 лет.</div>
+
+      <div class="qr-block">
+        <img id="qr-img" src="" alt="QR-код">
+        <div class="qr-text">
+          <span class="big">Сканируйте QR</span>
+          <span class="small">→ активируйте сертификат и&nbsp;запишитесь на пробный за 1 минуту</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ОБОРОТ -->
+    <div class="flyer face-back" id="back">
+      <div class="back-logo">
+        <img src="logo-kiberone.png" alt="KIBERone">
+        <span class="city" id="back-city">Набережные Челны</span>
+      </div>
+
+      <div class="back-title">
+        Ваш ребёнок создаст <span class="accent">свою игру с ИИ</span> за 1 час пробного
+      </div>
+
+      <ul class="benefits">
+        <li>Программа полностью переделана под нейросети в 2026 году</li>
+        <li>Ребёнок ставит задачу ИИ и получает готовый проект — игру, сценарий, озвучку</li>
+        <li>Группы по возрасту: 6–9 лет и 10–14 лет</li>
+        <li>Преподаватели — практикующие IT-специалисты</li>
+        <li>Международная сеть: 8&nbsp;000+ детей в 200+ городах мира</li>
+      </ul>
+
+      <div class="contact-block">
+        <div class="contact-label">📍 школа в вашем городе</div>
+        <div class="contact-row" id="back-city-line">Филиал KIBERone · Набережные Челны</div>
+        <div class="contact-row muted">🌐 сканируйте QR — заполните заявку онлайн</div>
+        <div class="contact-row muted">⏱ менеджер свяжется в течение 10 минут</div>
+
+        <div class="referral-line">
+          <strong>Если вам передал листовку друг</strong> — впишите его имя, чтобы мы поблагодарили:
+          <span class="ref-input"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const CITIES = {
+      chelny:      { name: 'Набережные Челны', utmCity: 'chelny'      },
+      nizhnekamsk: { name: 'Нижнекамск',       utmCity: 'nizhnekamsk' },
+      kazan:       { name: 'Казань',           utmCity: 'kazan'       },
+      elabuga:     { name: 'Елабуга',          utmCity: 'elabuga'     },
+      krasnodar:   { name: 'Краснодар',        utmCity: 'krasnodar'   },
+      surgut:      { name: 'Сургут',           utmCity: 'surgut'      },
+      perm:        { name: 'Пермь',            utmCity: 'perm'        }
+    };
+
+    // ⚠️ Маркетолог: продакшен-домен лендинга подставить сюда
+    const LANDING_BASE = 'https://podarok.it-kiber.ru/';
+
+    const params = new URLSearchParams(window.location.search);
+    let currentCity = (params.get('city') || 'chelny').toLowerCase();
+    let currentMedium = (params.get('medium') || 'mailbox').toLowerCase();
+    if (!CITIES[currentCity]) currentCity = 'chelny';
+    if (currentMedium !== 'mailbox' && currentMedium !== 'referral') currentMedium = 'mailbox';
+
+    function buildLandingUrl(city, medium) {
+      const c = CITIES[city];
+      const qs = new URLSearchParams({
+        utm_source: 'flyer',
+        utm_medium: medium,
+        utm_campaign: c.utmCity,
+        city: c.utmCity
+      });
+      return LANDING_BASE + '?' + qs.toString();
+    }
+
+    function buildQrUrl(landingUrl) {
+      // Используем публичный QR-сервер. Маркетолог может заменить на свой генератор/SVG.
+      return 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=0&data=' + encodeURIComponent(landingUrl);
+    }
+
+    function render() {
+      const c = CITIES[currentCity];
+      const landingUrl = buildLandingUrl(currentCity, currentMedium);
+      document.getElementById('qr-img').src = buildQrUrl(landingUrl);
+      document.getElementById('back-city').textContent = c.name;
+      document.getElementById('back-city-line').textContent = 'Филиал KIBERone · ' + c.name;
+      document.title = `Листовка KIBERone · ${c.name} · ${currentMedium === 'referral' ? 'рекомендация' : 'почт. ящики'}`;
+      document.getElementById('city-select').value = currentCity;
+      document.getElementById('medium-select').value = currentMedium;
+      const newUrl = window.location.pathname + '?city=' + currentCity + '&medium=' + currentMedium;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function changeCity(v) { currentCity = v; render(); }
+    function changeMedium(v) { currentMedium = v; render(); }
+
+    render();
+  </script>
+</body>
+</html>
